@@ -121,9 +121,10 @@ registry configuration is needed.
 To test a framework on a runtime other than Node.js, add an `optionalVariants` entry to the existing test app instead of
 creating a new app. `react-router-8-framework` is the reference setup.
 
-- **`RUNTIME` env var**: `node` (default), `bun`, `deno` or `cloudflare`. `tests/constants.ts` exports it, so tests can
-  branch on it where the runtimes are expected to differ (for example `platform` or `sdk.name`).
-- **Start commands**: `playwright.config.mjs` selects the start command from `RUNTIME`. Bun and Deno use the same build
+- **`RUNTIME` env var**: `node` (default), `bun`, `deno` or `cloudflare`. Read it with `getRuntime()` from
+  `@sentry-internal/test-utils`, which throws on any other value. Tests branch on it where the runtimes are expected to
+  differ (for example `platform` or `sdk.name`).
+- **Start commands**: `playwright.config.mjs` selects the start command with `getRuntime()`. Bun and Deno use the same build
   as Node and only change the start command, for example
   `bun --bun --preload ./instrument.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js` and
   `deno run -A --preload ./instrument.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js`.

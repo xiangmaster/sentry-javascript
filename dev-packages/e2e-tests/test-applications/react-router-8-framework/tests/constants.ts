@@ -1,5 +1,5 @@
-export type Runtime = 'node' | 'bun' | 'deno' | 'cloudflare';
+import { getRuntime } from '@sentry-internal/test-utils';
 
-export const RUNTIME = (process.env.RUNTIME || 'node') as Runtime;
+export const RUNTIME = getRuntime();
 
 export const APP_NAME = 'react-router-8-framework';
