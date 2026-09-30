@@ -37,14 +37,15 @@ test.describe('server-side errors', () => {
         headers: expect.any(Object),
       },
       level: 'error',
-      platform: RUNTIME === 'cloudflare' ? 'javascript' : 'node',
+      // Only Node inits `@sentry/react-router`. Bun, Deno and Cloudflare init their runtime's own SDK.
+      platform: RUNTIME === 'cloudflare' || RUNTIME === 'deno' ? 'javascript' : 'node',
       environment: 'qa',
       sdk: {
         integrations: expect.any(Array<string>),
-        name: RUNTIME === 'cloudflare' ? 'sentry.javascript.cloudflare' : 'sentry.javascript.react-router',
+        name: RUNTIME === 'node' ? 'sentry.javascript.react-router' : `sentry.javascript.${RUNTIME}`,
         version: expect.any(String),
       },
-      ...(RUNTIME === 'cloudflare' ? {} : { tags: { runtime: 'node' } }),
+      ...(RUNTIME === 'node' ? { tags: { runtime: 'node' } } : {}),
       contexts: {
         trace: {
           span_id: expect.any(String),
@@ -89,14 +90,14 @@ test.describe('server-side errors', () => {
         headers: expect.any(Object),
       },
       level: 'error',
-      platform: RUNTIME === 'cloudflare' ? 'javascript' : 'node',
+      platform: RUNTIME === 'cloudflare' || RUNTIME === 'deno' ? 'javascript' : 'node',
       environment: 'qa',
       sdk: {
         integrations: expect.any(Array<string>),
-        name: RUNTIME === 'cloudflare' ? 'sentry.javascript.cloudflare' : 'sentry.javascript.react-router',
+        name: RUNTIME === 'node' ? 'sentry.javascript.react-router' : `sentry.javascript.${RUNTIME}`,
         version: expect.any(String),
       },
-      ...(RUNTIME === 'cloudflare' ? {} : { tags: { runtime: 'node' } }),
+      ...(RUNTIME === 'node' ? { tags: { runtime: 'node' } } : {}),
       contexts: {
         trace: {
           span_id: expect.any(String),

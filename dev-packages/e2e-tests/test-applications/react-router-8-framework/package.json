@@ -9,7 +9,9 @@
     "react-router": "^8.0.0",
     "@react-router/node": "^8.0.0",
     "@react-router/serve": "^8.0.0",
+    "@sentry/bun": "file:../../packed/sentry-bun-packed.tgz",
     "@sentry/cloudflare": "file:../../packed/sentry-cloudflare-packed.tgz",
+    "@sentry/deno": "file:../../packed/sentry-deno-packed.tgz",
     "@sentry/react-router": "file:../../packed/sentry-react-router-packed.tgz",
     "ioredis": "^5.11.1",
     "isbot": "^5.1.43"
@@ -31,8 +33,8 @@
     "test:build-latest": "pnpm install && pnpm add react-router@latest && pnpm add @react-router/node@latest && pnpm add @react-router/serve@latest && pnpm build",
     "dev": "NODE_OPTIONS='--import ./instrument.mjs' react-router dev",
     "start": "NODE_ENV=production NODE_OPTIONS='--import ./instrument.mjs' react-router-serve ./build/server/index.js",
-    "start:bun": "NODE_ENV=production bun --bun --preload ./instrument.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js",
-    "start:deno": "NODE_ENV=production deno run -A --preload ./instrument.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js",
+    "start:bun": "NODE_ENV=production bun --bun --preload ./instrument.bun.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js",
+    "start:deno": "NODE_ENV=production deno run -A --preload=@sentry/deno/import --preload=./instrument.deno.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js",
     "start:cloudflare": "wrangler dev --config ./build/server/wrangler.json --port 3030",
     "proxy": "node start-event-proxy.mjs",
     "typecheck": "react-router typegen && tsc",
@@ -76,6 +78,11 @@
       }
     ],
     "optionalVariants": [
+      {
+        "assert-command": "pnpm test:assert:bun",
+        "runtime": "bun",
+        "label": "react-router-8-framework (bun)"
+      },
       {
         "assert-command": "pnpm test:assert:deno",
         "runtime": "deno",

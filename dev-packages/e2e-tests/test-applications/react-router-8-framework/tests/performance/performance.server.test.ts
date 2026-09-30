@@ -27,7 +27,7 @@ test.describe('server - performance', () => {
       'sentry.segment.name.source': { value: 'route', type: 'string' },
       'sentry.environment': { value: 'qa', type: 'string' },
       'sentry.sdk.name': {
-        value: RUNTIME === 'cloudflare' ? 'sentry.javascript.cloudflare' : 'sentry.javascript.react-router',
+        value: RUNTIME === 'node' ? 'sentry.javascript.react-router' : `sentry.javascript.${RUNTIME}`,
         type: 'string',
       },
       'sentry.sdk.version': { value: expect.any(String), type: 'string' },
@@ -60,7 +60,7 @@ test.describe('server - performance', () => {
       'sentry.segment.name.source': { value: 'route', type: 'string' },
       'sentry.environment': { value: 'qa', type: 'string' },
       'sentry.sdk.name': {
-        value: RUNTIME === 'cloudflare' ? 'sentry.javascript.cloudflare' : 'sentry.javascript.react-router',
+        value: RUNTIME === 'node' ? 'sentry.javascript.react-router' : `sentry.javascript.${RUNTIME}`,
         type: 'string',
       },
       'sentry.sdk.version': { value: expect.any(String), type: 'string' },

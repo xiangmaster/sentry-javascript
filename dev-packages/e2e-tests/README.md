@@ -124,10 +124,16 @@ creating a new app. `react-router-8-framework` is the reference setup.
 - **`RUNTIME` env var**: `node` (default), `bun`, `deno` or `cloudflare`. Read it with `getRuntime()` from
   `@sentry-internal/test-utils`, which throws on any other value. Tests branch on it where the runtimes are expected to
   differ (for example `platform` or `sdk.name`).
+- **SDK per runtime**: each runtime inits its own SDK, the way a user of that runtime would: Node the framework SDK
+  (`instrument.mjs`), Bun `@sentry/bun` (`instrument.bun.mjs`), Deno `@sentry/deno` (`instrument.deno.mjs`) and
+  Cloudflare `@sentry/cloudflare`. The framework SDK only provides the framework wrappers on the other runtimes, so
+  values that come from its `init()` (`sdk.name`, default integrations) are Node-only.
 - **Start commands**: `playwright.config.mjs` selects the start command with `getRuntime()`. Bun and Deno use the same build
   as Node and only change the start command, for example
-  `bun --bun --preload ./instrument.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js` and
-  `deno run -A --preload ./instrument.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js`.
+  `bun --bun --preload ./instrument.bun.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js` and
+  `deno run -A --preload=@sentry/deno/import --preload=./instrument.deno.mjs ./node_modules/@react-router/serve/bin.cjs ./build/server/index.js`.
+  The app's `deno.json` maps `@sentry/deno/import` to `node_modules`, because the e2e dependencies are `file:` tarballs
+  that `npm:@sentry/deno/import` does not resolve.
 - **Cloudflare**: the app has the Cloudflare dependencies installed all the time. The Cloudflare build has its own
   `vite.cloudflare.config.ts` with `@cloudflare/vite-plugin` and `sentryCloudflareVitePlugin` from
   `@sentry/cloudflare/vite`, and the variant's `build-command` passes it with `--config`. Node, Bun and Deno share
@@ -146,9 +152,7 @@ creating a new app. `react-router-8-framework` is the reference setup.
   for example `"deno-version": "v2.9.0"`.
 - **Bun**: under `bun run` the SDK cannot inject diagnostics channels into packages that stay outside the build (for
   example Express behind `react-router-serve`), so those produce no spans on Bun. Where a test depends on them, branch
-  on `RUNTIME` and say why in a comment. `react-router-8-framework` keeps its Bun scripts but runs no Bun variant in CI
-  yet: Bun never publishes `http.server.request.start`, so `@sentry/node` creates no `http.server` span there. Add the
-  variant back once `@sentry/node` handles that on Bun.
+  on `RUNTIME` and say why in a comment.
 
 ```json
 "sentryTest": {
