@@ -75,7 +75,14 @@ function createChannel(): Channel {
   };
 }
 
-const registry = new Map<string, BrowserTracingChannel>();
+declare global {
+  // oxlint-disable-next-line no-var
+  var __SENTRY_REMIX_DC_REGISTRY__: Map<string, BrowserTracingChannel> | undefined;
+}
+
+// Held on `globalThis`, so a second copy of this module loaded under another URL still shares one
+// set of subscribers instead of splitting them, which would leave instrumentation silently inert.
+const registry = (globalThis.__SENTRY_REMIX_DC_REGISTRY__ ??= new Map<string, BrowserTracingChannel>());
 
 /** Create (or look up) a tracing channel by name. */
 export function tracingChannel(name: string): BrowserTracingChannel {
