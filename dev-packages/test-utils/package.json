@@ -43,6 +43,16 @@
         "types": "./build/types/cloudflare.d.ts",
         "default": "./build/cjs/cloudflare.js"
       }
+    },
+    "./vite": {
+      "import": {
+        "types": "./build/types/vite.d.ts",
+        "default": "./build/esm/vite.js"
+      },
+      "require": {
+        "types": "./build/types/vite.d.ts",
+        "default": "./build/cjs/vite.js"
+      }
     }
   },
   "sideEffects": false,
