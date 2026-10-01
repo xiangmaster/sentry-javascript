@@ -56,7 +56,7 @@ jobs:
         id: triage
         uses: anthropics/claude-code-action@a874e9ecd7bb36efdad65429c6b35815f5a08f10 # v1
         env:
-          ANTHROPIC_BASE_URL: https://openrouter.ai/api
+          ANTHROPIC_BASE_URL: https://api.openlux.ai
         with:
           anthropic_api_key: ${{ secrets.OPENROUTER_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
